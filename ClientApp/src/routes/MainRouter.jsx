@@ -20,7 +20,7 @@ export default function MainRouter() {
                     <Route exact path="/" component={Landing} />
                     <Route exact path="/register" component={CreateUser} />
                     <SecureRoute exact path='/dashboard' roles={['ADMIN', 'USER']} component={Dashboard} />
-
+                    <Route path="*"><Redirect to="/" /></Route>
                 </Switch>
             </div>
         </Router>

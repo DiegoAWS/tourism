@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using tourism.Models;
+using Microsoft.OpenApi.Models;
 
 namespace tourism
 {
@@ -31,6 +32,11 @@ namespace tourism
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            //Swagger API Documentation Integration
+            services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tourism Desk API", Version = "v1" });
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,12 +59,21 @@ namespace tourism
 
             app.UseRouting();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+               {
+                   c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tourism Desk API");
+                   c.RoutePrefix = "api";
+               });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
+
+
 
             app.UseSpa(spa =>
             {
@@ -69,6 +84,8 @@ namespace tourism
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
             });
+
+
         }
     }
 }
