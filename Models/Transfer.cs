@@ -1,4 +1,4 @@
-namespace tourism_desk.Models
+namespace tourism.Models
 {
     public class Transfer
     {
@@ -6,7 +6,7 @@ namespace tourism_desk.Models
         public string title { get; set; }
         public string startTime { get; set; }
         public string endTime { get; set; }
-        public string price { get; set; }
+        public int price { get; set; }
         public long idSalesMan { get; set; }
         public string nameSalesMan { get; set; }
         public string type { get; set; }

@@ -82,14 +82,14 @@ const CreatePackage = ({
     useEffect(() => {
 
         
-        switch (serviceToAdd) {
-            case 'TRANSFER':
+        // switch (serviceToAdd) {
+        //     case 'TRANSFER':
                 
-                break;
+        //         break;
         
-            default:
-                break;s
-        }
+        //     default:
+        //         break;
+        // }
         axios
             .get('https://jsonplaceholder.typicode.com/comments')
             .then(value => {

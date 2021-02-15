@@ -1,14 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace tourism_desk.Models
+namespace tourism.Models
 {
-    public class TransferContext  : DbContext
+    public class AppDBContext  : DbContext
     {
-        public TransferContext (DbContextOptions <TransferContext> options)
+        public AppDBContext (DbContextOptions <AppDBContext> options)
             : base(options)
         {
         }
 
         public DbSet<Transfer> Transfers { get; set; }
+
+     
     }
 }
