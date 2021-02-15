@@ -1,6 +1,16 @@
 <h1>Prueba FULL STACK</h1>
 <h2>BURÓ DE VENTAS</h2>
 <hr/>
+<h2>Pasos para Instalar</h2>
+
+<ul>
+<li> dotnet ef database update</li>
+<li> <code> cd ClientApp && yarn</code> </li>
+<li> <code> yarn start</code> </li>
+<li> <code> cd ..</code> </li>
+<li> <code> dotnet run</code> </li>
+</ul>
+<hr/>
 <p>
 Se necesita implementar una aplicación web para la gestión de paquetes turísticos y su posterior venta a clientes.
 Para el caso de los paquetes se deben registrar las ofertas que lo componen (Hospedajes, Traslados, Excursiones) así como el costo total.
