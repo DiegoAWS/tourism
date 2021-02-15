@@ -1,13 +1,25 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using tourism.Models;
 
 namespace tourism.Models
 {
-    public class AppDBContext  : DbContext
+
+
+    public class AppDBContext : DbContext
     {
-        public AppDBContext (DbContextOptions <AppDBContext> options)
+
+        protected readonly IConfiguration Configuration;
+        public AppDBContext(IConfiguration configuration, DbContextOptions<AppDBContext> options)
             : base(options)
         {
+            Configuration = configuration;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            // connect to sqlite database
+            options.UseSqlite(Configuration.GetConnectionString("sqliteDB"));
         }
 
         public DbSet<tourism.Models.Transfer> Transfer { get; set; }
@@ -20,6 +32,6 @@ namespace tourism.Models
 
         public DbSet<tourism.Models.Sale> Sale { get; set; }
 
-     
+        public DbSet<User> Users { get; set; }
     }
 }

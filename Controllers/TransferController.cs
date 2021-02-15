@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using tourism.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace tourism.Controllers
 {
@@ -21,6 +21,7 @@ namespace tourism.Controllers
         }
 
         // GET: api/Transfer
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Transfer>>> GetTransfer()
         {
