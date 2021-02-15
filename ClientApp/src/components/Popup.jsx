@@ -10,13 +10,13 @@ const useStyle = makeStyles((theme) => ({
 
     dialogWrapper: {
         padding: theme.spacing(2),
-        backgroundImage: 'linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)',
+        backgroundImage: 'linear-gradient(315deg, #9ccdff 0%, #a9c6e6 74%)',
 
     }
 }))
 
 
-const Popup = ({ title, children, maxWidth, openPopup, setOpenPopup, recolocaEditItem, saveData }) => {
+const Popup = ({ title, children, maxWidth, openPopup, saveData,discardData }) => {
 
 
 
@@ -57,11 +57,9 @@ const Popup = ({ title, children, maxWidth, openPopup, setOpenPopup, recolocaEdi
                         color="secondary"
                         style={{ margin: '10px' }}
                         onClick={() => {
-                            if (title.includes('Editar'))
-                                recolocaEditItem()
 
-
-                            setOpenPopup(false)
+discardData()
+                           
                         }} >
                         <CloseIcon />
 

@@ -47,10 +47,10 @@ export const login = (user) => {
 };
 
 export const logout = () => {
-//   localStorage.removeItem("username");
-//   localStorage.removeItem("role");
-//   localStorage.removeItem("token");
-//   setTimeout(() => {
-//     window.location.replace(window.location.origin);
-//   }, 1000);
+  localStorage.removeItem("username");
+  localStorage.removeItem("role");
+  localStorage.removeItem("token");
+  setTimeout(() => {
+    window.location.replace(window.location.origin);
+  }, 100);
 };

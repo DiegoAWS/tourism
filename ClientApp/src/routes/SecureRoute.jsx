@@ -10,6 +10,7 @@ const SecureRoute = ({ path, roles, component: Component, history }) => {
 
     if (!localStorage.token || !localStorage.username || !localStorage.role) {
 
+        history.push('/')
         logout()
         return null
     }

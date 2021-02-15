@@ -1,49 +1,57 @@
-import React, { useState,useRef} from 'react'
+import React, { useState, useRef } from 'react'
 
-import {TextField, IconButton } from '@material-ui/core'
+import { TextField, IconButton } from '@material-ui/core'
 import Autocomplete, {
     createFilterOptions,
 } from "@material-ui/lab/Autocomplete";
 import AddIcon from "@material-ui/icons/Add";
 
-
-export default function MyAutocomplete() {
-const [datalist, setDatalist] = useState([])
-const [servicioSeleccionado, setservicioSeleccionado] = useState(null)
-const [serviceSearchText, setServiceSearchText] = useState('')
+import loadingGif from '../assets/img/loading.gif';
 
 
-const filterDatos = createFilterOptions({
-    stringify: (option) => option.title ,
-});
+export default function MyAutocomplete({
+    options, servicioSeleccionado,
+    loading,
+    setservicioSeleccionado, AddService, serviceTitle
+
+}) {
 
 
-  //#region useBlur :)
-  const useBlur = () => {
-    const htmlElRef = useRef(null);
-    const setBlur = () => {
-        htmlElRef.current && htmlElRef.current.blur();
+    const [serviceSearchText, setServiceSearchText] = useState('')
+
+
+    const filterDatos = createFilterOptions({
+        stringify: (option) => option.title,
+    });
+
+
+    //#region useBlur :)
+    const useBlur = () => {
+        const htmlElRef = useRef(null);
+        const setBlur = () => {
+            htmlElRef.current && htmlElRef.current.blur();
+        };
+
+        return [htmlElRef, setBlur];
     };
 
-    return [htmlElRef, setBlur];
-};
 
+    const [inputRef, setInputRef] = useBlur();
 
-const [inputRef, setInputRef] = useBlur();
-
-//#endregion
+    //#endregion
 
 
     return (
         <div style={{ display: "flex" }}>
             <Autocomplete
+                disabled={loading}
                 size="small"
                 autoComplete
                 clearOnBlur
                 fullWidth
                 noOptionsText=""
                 clearText="Limpiar Cliente"
-                options={datalist}
+                options={options}
                 filterOptions={(options, params) => {
                     let filtered = filterDatos(
                         options,
@@ -56,11 +64,9 @@ const [inputRef, setInputRef] = useBlur();
                         filtered[0].id
                     ) {
                         setTimeout(() => {
-                          setInputRef();
-                            // cargaDatosClienteSel(
-                            //     filtered[0].id
-                            // );
-                            // setClienteSeleccionado(filtered[0]);
+                            setInputRef();
+
+                            setservicioSeleccionado(filtered[0]);
                         }, 500);
                     }
                     return filtered;
@@ -68,12 +74,6 @@ const [inputRef, setInputRef] = useBlur();
                 value={servicioSeleccionado}
                 onChange={(e, newValue) => {
                     setservicioSeleccionado(newValue);
-
-                    // if (newValue && newValue.id) {
-                    //     cargaDatosClienteSel(newValue.id);
-                    // } else {
-                    //     clearClienteSeleccionado();
-                    // }
                 }}
                 getOptionSelected={(option, value) => {
                     return option.title === value.title;
@@ -90,7 +90,6 @@ const [inputRef, setInputRef] = useBlur();
                 )}
                 renderInput={(params) => (
                     <TextField
-                        // className={classes.nombreProducto}
                         inputRef={inputRef}
                         {...params}
                         label="Seleccione Servicio"
@@ -101,16 +100,16 @@ const [inputRef, setInputRef] = useBlur();
 
             <IconButton
                 onClick={(e) => {
-                    // setClienteSeleccionado(null);
-                    // setFormDataAddCliente(initFormAddCliente);
-                    // setOpenFormAddCliente(true);
+                    AddService()
                 }}
-                title="Añadir Cliente"
+                disabled={!servicioSeleccionado}
+                title={'Crear ' + serviceTitle}
                 color="secondary"
-                size="medium"
+                size="small"
                 variant="contained"
             >
-                <AddIcon />
+                {!loading ? <AddIcon />
+                    : <img src={loadingGif} width='20px' alt='' />}
             </IconButton>
         </div>
     )

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { getAllPackage, deletePackage } from '../services/package.services'
+import { getAll, deleteItem } from '../../services/api.services'
 import CreatePackage from './CreatePackage'
 
 
@@ -9,7 +9,7 @@ import { Button } from '@material-ui/core'
 import ContactMailIcon from '@material-ui/icons/ContactMail'
 import AddIcon from '@material-ui/icons/Add'
 import Datatable from '../../components/Datatable'
-
+import Navbar from '../../components/Navbar'
 
 const Packages = props => {
 
@@ -31,12 +31,11 @@ const Packages = props => {
     const camposPaquete = [
 
         ['title', 'Nombre del Paquete'],
-        ['userId','Creado por'],
-        ['userId', 'Tipo de Paquete'],
-        ['id', 'Precio Total'],
-       
-       
+        ['price', 'Precio Total'],
     ]
+
+    if (localStorage.role === "ADMIN")
+        camposPaquete.concat(['userId', 'Creado por'])
     //#endregion campos Paquete
 
 
@@ -46,12 +45,19 @@ const Packages = props => {
 
 
 
-    var formInit = {}
+    var formInit = {
+        id: null,
+        title: '',
+        transfers: [],
+        hotels: [],
+        excursions: [],
+        price: 0
+    }
 
 
 
     //#endregion Inicializing the Form
-    const [formData, SetFormData] = useState(formInit)
+    const [formData, setFormData] = useState(formInit)
 
 
 
@@ -72,27 +78,15 @@ const Packages = props => {
 
         clearform()
 
-        getAllPackage()
-            .then(request => {
-
-                if (request && request.data && request.data[0] && request.data[0].id) {
-
-                    var newData = request.data.map(dataRequested => {
-
-                        let instantData = {}
-
-                        camposPaquete.forEach(item => {
-                            instantData[item[0]] = (!dataRequested[item[0]]) ? "" : dataRequested[item[0]]
-                        })
-
-                        return { ...instantData, id: dataRequested.id }
-
-                    })
+        getAll('Package')
+            .then(response => {
+                if (response && response.data && response.data[0] && response.data[0].id) {
 
 
-                    setData(newData)
+
+                    setData(response.data)
                 }
-                if (request && request.statusText === 'OK' && request.data && request.data.length === 0)
+                if (response && response.status === 200 && response.data && response.data.length === 0)
                     SetSinDatos(true)
 
             })
@@ -107,7 +101,7 @@ const Packages = props => {
 
         setData(temp)
 
-        SetFormData(item)
+        setFormData(item)
         setOpenPopup(true)
 
 
@@ -121,7 +115,7 @@ const Packages = props => {
 
         clearform()
 
-        deletePackage( itemDelete.id)
+        deleteItem(itemDelete.id, 'package')
             .then(() => {
                 cargaData()
 
@@ -139,7 +133,7 @@ const Packages = props => {
     const clearform = () => {
 
         editingValue.current = {}
-        SetFormData(formInit)
+        setFormData(formInit)
 
     }
     const recolocaEditItem = () => {
@@ -157,6 +151,7 @@ const Packages = props => {
 
     return (
         <>
+        <Navbar/>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
                 <div>
@@ -182,7 +177,7 @@ const Packages = props => {
                 setOpenPopup={setOpenPopup}
 
                 formData={formData}
-                SetFormData={SetFormData}
+                setFormData={setFormData}
 
                 data={data}
                 setData={setData}

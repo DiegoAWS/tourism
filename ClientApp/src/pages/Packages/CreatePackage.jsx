@@ -1,13 +1,22 @@
+import React, { useCallback, useState, useEffect } from 'react'
+import { nanoid } from 'nanoid'
+
+
 import { Button, Dialog, DialogContent, Grid, Hidden, IconButton, InputAdornment, makeStyles, TextField, MenuItem } from '@material-ui/core'
+
 import CloseIcon from '@material-ui/icons/Close'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import SaveAltIcon from '@material-ui/icons/SaveAlt'
-import React, { useCallback, useMemo, useState, useEffect } from 'react'
+import AddIcon from '@material-ui/icons/Add';
 import DataTable, { createTheme } from 'react-data-table-component'
-import loadingGif from "../assets/img/loading.gif"
-import { createPackage, updatePackage } from '../services/package.services'
-import MyAutocomplete from '../../components/MyAutocomplete'
-import axios from 'axios'
+
+
+import { createItem, updateItem } from '../../services/api.services'
+
+import loadingGif from '../../assets/img/loading.gif';
+import CreateHotel from './CreateHotel'
+import CreateTransfer from './CreateTransfer'
+
 
 
 //#region makeStyle
@@ -33,7 +42,7 @@ const useStyle = makeStyles((theme) => ({
     },
     dialogWrapper: {
         padding: theme.spacing(2),
-        backgroundImage: 'linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)'
+        backgroundImage: 'linear-gradient(315deg, #9ccdff 0%, #a9c6e6 74%)'
     },
     dialogTitle: {
         display: 'flex',
@@ -53,52 +62,109 @@ const useStyle = makeStyles((theme) => ({
 
 //#endregion makeStyle
 
-//#region getData
+//#region Others
 
+const correctTitle = (serviceToAdd) => {
+    switch (serviceToAdd) {
+        case 'TRANSFER':
+            return 'traslado'
 
+        case 'HOTEL':
+            return 'alojamiento'
 
-//#endregiongetData
+        case 'EXCURSION':
+            return 'excursión'
+
+        default:
+            return ''
+    }
+}
+//#endregion
+
 const CreatePackage = ({
     data, setData,
-    formData, SetFormData,
+    formData, setFormData,
     openPopup, setOpenPopup,//Del PopUP
-    recolocaEditItem,
-    cargaData, showLoading = () => { }
+    cargaData, recolocaEditItem
 }) => {
 
     const classes = useStyle()
 
     //#region STATE
-    const [services, setServices] = useState([])
-    const [loadingServices, setLoadingServices] = useState(false)
+    const [hotels, setHotels] = useState([])
+    const [hotelsOpen, setHotelsOpen] = useState(false)
 
-    const [serviceToAdd, setServiceToAdd] = useState('TRANSFER')
+    const [transfers, setTransfers] = useState([])
+    const [transfersOpen, setTransfersOpen] = useState(false)
+
+    const [excursions, setExcursions] = useState([])
+    const [excursionsOpen, setExcursionssOpen] = useState(false)
+
+    const [services, setServices] = useState([])
+
+
+
+    const [loading, setLoading] = useState(false)
+
+
+
 
     //#endregion STATE
 
 
     //#region useEffect
 
+
+    //#region auto
+    // AutoSearch for services to add
+    // useEffect(() => {
+    //     if (openPopup) {
+    //         let service = 'excursion'
+    //         setLoadingServices(true)
+
+    //         switch (serviceToAdd) {
+    //             case 'TRANSFER':
+    //                 service = 'transfer'
+    //                 break;
+    //             case 'HOTEL':
+    //                 service = 'hotel'
+    //                 break;
+    //             case 'EXCURSION':
+    //                 service = 'excursion'
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //         getAll(service).then(response => {
+    //             setLoadingServices(false)
+    //             if (response?.data && response.status === 200) {
+    //                 setServiceList(response.data)
+    //             }
+
+    //         })
+    //     }
+    // }, [serviceToAdd, openPopup])
+    //#endregion 
+
+    // Auto calcule Price
     useEffect(() => {
+        if (openPopup) {
+            let priceTotal = 0
 
-        
-        // switch (serviceToAdd) {
-        //     case 'TRANSFER':
-                
-        //         break;
-        
-        //     default:
-        //         break;
-        // }
-        axios
-            .get('https://jsonplaceholder.typicode.com/comments')
-            .then(value => {
-
-                console.log(value)
+            services.forEach(item => {
+                priceTotal += item.price
             })
-    }, [])
+            setFormData({ ...formData, price: priceTotal })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [services])
+
+
 
     //#endregion useEffect
+
+
+
 
 
     //#region columnServices
@@ -111,9 +177,11 @@ const CreatePackage = ({
                 size="small" title='Quitar Servicio' color="secondary"
                 variant="contained"
                 onClick={e => {
-                    if (window.confirm("¿Seguro que desea Borrar este ítem?"))
-                        // handleDelete(data)
-                        window.alert('BORRADO')
+                    console.log('ROW', row)
+                    if (window.confirm("¿Seguro que desea Quitar este ítem?")) {
+
+
+                    }
                 }}>
                 <DeleteForeverIcon />
             </IconButton>
@@ -124,6 +192,25 @@ const CreatePackage = ({
             grow: 1,
             name: 'Nombre',
             selector: 'title',
+            sortable: true
+        },
+        {
+            minWidth: '100px',
+            name: 'Inicio',
+            selector: 'startTime',
+            sortable: true
+        },
+        {
+            minWidth: '100px',
+            name: 'Fin',
+            selector: 'endTime',
+            sortable: true,
+            hide: "md"
+        },
+        {
+            minWidth: '100px',
+            name: 'Precio',
+            selector: 'price',
             sortable: true
         }
 
@@ -171,25 +258,37 @@ const CreatePackage = ({
     //#region SAVEDATA
     const saveData = () => {
         setOpenPopup(false)
-        showLoading()
 
 
-        if (data.length === 0) //Si ningun Dato 
+
+        if (data.length === 0) //If there is no Packages
             setData([formData])
-        else//Ya hay datos
+        else//If we have packages
             setData(data.concat(formData))
 
+        const transfers = services.filter(item => item.serviceType === "TRANSFER")
 
+        const hotels = services.filter(item => item.serviceType === "HOTEL")
+
+        const excursions = services.filter(item => item.serviceType === "EXCURSION")
+
+        const dataOK = {
+            title: formData.title,
+            price: formData.price,
+            excursions: excursions.map(item => item.id).join('|'),
+            hotels: hotels.map(item => item.id).join('|'),
+            transfers: transfers.map(item => item.id).join('|')
+        }
 
         if (formData.id) {// Editing Package....
 
-            updatePackage(formData.id, formData).then(() => { cargaData() })
+            updateItem(formData.id, { ...dataOK, id: formData.id }, 'package').then(() => { cargaData() })
         }
         else { //creating Package
-            createPackage(formData).then(() => { cargaData() })
+            createItem(dataOK, 'package').then(() => { cargaData() })
         }
 
-
+        setServices([])
 
     }
     //#endregion SAVEDATA
@@ -203,19 +302,13 @@ const CreatePackage = ({
     //#endregion handleShowService
 
     return (
-        <Dialog disableBackdropClick disableEscapeKeyDown
-            open={openPopup} maxWidth={'lg'} fullWidth
+        <Dialog disableBackdropClick disableEscapeKeyDown open={openPopup} maxWidth={'lg'} fullWidth
             classes={{ paper: classes.dialogWrapper }}>
-
-            <IconButton classes={{ root: classes.closeIcon }}
-                onClick={() => {
-                    if (formData.id)
-                        recolocaEditItem()
-                    setOpenPopup(false)
-                }} >
-                <CloseIcon />
-            </IconButton>
-
+            <IconButton classes={{ root: classes.closeIcon }} onClick={() => {
+                formData.id && recolocaEditItem()
+                setOpenPopup(false)
+                setServices([])
+            }} >  <CloseIcon /> </IconButton>
             <DialogContent classes={{ root: classes.dialogRoot }}>
                 {
                     //#region DialogTitle
@@ -233,8 +326,8 @@ const CreatePackage = ({
 
                     <Grid item xs={12} md={5} >
                         <TextField label={'Nombre del Paquete'} variant="outlined" size="small"
-                            value={formData.name || ''} fullWidth
-                            onChange={e => { SetFormData({ ...formData, name: e.target.value }) }} />
+                            value={formData.title || ''} fullWidth required
+                            onChange={e => { setFormData({ ...formData, title: e.target.value }) }} />
                     </Grid>
 
 
@@ -244,7 +337,7 @@ const CreatePackage = ({
 
                         <Button color="secondary" fullWidth
                             variant="contained"
-
+                            disabled={formData?.title?.length === 0 || services?.length === 0}
                             onClick={() => { saveData() }} >
                             <Hidden xsDown >
                                 Vender</Hidden>
@@ -257,6 +350,7 @@ const CreatePackage = ({
 
                         <Button color="primary" fullWidth
                             variant="contained"
+                            disabled={formData?.title?.length === 0 || services?.length === 0}
                             onClick={() => { saveData() }} >
                             <Hidden xsDown >
                                 Guardar</Hidden>
@@ -277,48 +371,42 @@ const CreatePackage = ({
                 }
                 <Grid container spacing={3}>
 
-                    <Grid item xs={12} sm={3}>
-                        <TextField
-                            select
-                            size="small"
-                            label="Seleccione"
-                            variant="outlined"
-                            value={serviceToAdd}
-                            onChange={(e) => { setServiceToAdd(e.target.value) }}
-                            helperText="Servicio a Agregar"
-                        >
 
-                            <MenuItem value='TRANSFER'>
-                                Traslado
-                                </MenuItem>
-                            <MenuItem value='HOTEL'>
-                                Alojamiento
-                                </MenuItem>
-                            <MenuItem value='EXCURSION'>
-                                Excursión
-                                </MenuItem>
-                        </TextField>
-                    </Grid>
 
-                    <Grid item xs={12} sm={5}>
-                        <MyAutocomplete />
-                    </Grid>
 
-                    <Grid item xs={12} sm={2}>
+
+                    <Grid item xs={12} sm={6} md={3}>
                         <Button color="primary" fullWidth
                             variant="contained"
+                            onClick={() => { setHotelsOpen(true) }} >
+                            <AddIcon />
+                             Alojamiento
 
-                            onClick={() => { saveData() }} >
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <Button color="primary" fullWidth
+                            variant="contained"
+                            onClick={() => { setTransfersOpen(true) }} >
+                            <AddIcon />
+                             Traslado
 
-                            Agregar
-                            <SaveAltIcon />
                         </Button>
                     </Grid>
 
-                    <Grid item xs={12} sm={2}>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <Button color="primary" fullWidth
+                            variant="contained"
+                            onClick={() => { setExcursionssOpen(true) }} >
+                            <AddIcon />
+                             Excursión
+                        </Button>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={3} >
                         <TextField
                             label={'Precio Total'} variant="outlined" size="small"
-                            value={0} readOnly fullWidth
+                            value={formData.price} readOnly fullWidth
                             InputProps={{
                                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
                             }} />
@@ -341,10 +429,10 @@ const CreatePackage = ({
 
 
                     <DataTable
-                        columns={useMemo(() => columnServices, [columnServices])}
-                        data={services}
-                        keyField={'id'}
-                        defaultSortField={'id'}
+                        columns={columnServices}
+                        data={[...hotels, ...transfers, ...excursions]}
+                        keyField={'keyField'}
+                        defaultSortField={'startTime'}
                         defaultSortAsc={false}
                         pagination
                         highlightOnHover
@@ -352,22 +440,35 @@ const CreatePackage = ({
                         noHeader
                         onRowClicked={useCallback(handleShowService, [handleShowService])}
                         responsive
-                        noDataComponent={loadingServices ? <img src={loadingGif} width='20px' alt='' /> : <div><h3>Agregue algunos servicios por favor</h3></div>}
+                        noDataComponent={!loading ? <div><hr /><h3>Sin Resultados que mostrar <sup>*</sup> </h3><hr /></div> : <img src={loadingGif} width='20px' alt='' />}
                         paginationComponentOptions={{
                             rowsPerPageText: 'Filas por Pagina:',
                             rangeSeparatorText: 'de'
                         }}
-                        paginationPerPage={10}
-                        paginationRowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
+                        paginationPerPage={5}
+                        paginationRowsPerPageOptions={[5, 10, 20]}
                         theme="tableTheme"
                     />
                 </div>
                 {
                     //#endregion DATATABLE
                 }
+                <CreateHotel
+                    data={hotels}
+                    setData={setHotels}
+                    openPopup={hotelsOpen}
+                    setOpenPopup={setHotelsOpen}
+                />
+                <CreateTransfer
+                    data={transfers}
+                    setData={setTransfers}
+                    openPopup={transfersOpen}
+                    setOpenPopup={setTransfersOpen}
+                />
+
 
             </DialogContent>
-        </Dialog>
+        </Dialog >
 
     )
 

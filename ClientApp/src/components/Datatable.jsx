@@ -105,7 +105,7 @@ function Datatable({ campos, sinDatos, SetSinDatos, data, handleDelete, handleEd
 
       </IconButton>
 
-      <IconButton
+      {/* <IconButton
         title='Editar datos' color="primary"
         size="small"
         style={{ margin: '0 5px', backgroundColor: 'white' }}
@@ -117,21 +117,12 @@ function Datatable({ campos, sinDatos, SetSinDatos, data, handleDelete, handleEd
 
         <EditIcon />
 
-      </IconButton>
+      </IconButton> */}
     </div>
   )
 
 
-  const handleShow = row => {
-    let newShow = []
-    campos.forEach(item => {
-      if (row[item[0]].length > 0)
-        newShow.push([item[1], row[item[0]]])
-    })
-    showingValue.current = newShow
-    setOpenModalShow(true)
-  }
-
+  
 
 
   const handleSearch = text => {
@@ -204,7 +195,7 @@ function Datatable({ campos, sinDatos, SetSinDatos, data, handleDelete, handleEd
         highlightOnHover
         dense
         noHeader
-        onRowClicked={useCallback(handleShow, [handleShow])}
+        onRowClicked={row=>{ handleEdit(row)}}
         responsive
         conditionalRowStyles={conditionalRowStyles}
         selectableRowsVisibleOnly
@@ -236,7 +227,7 @@ function Datatable({ campos, sinDatos, SetSinDatos, data, handleDelete, handleEd
       >
 
         <Grid container wrap='wrap' justify='space-between' style={{
-          backgroundImage: 'linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)',
+          backgroundImage: 'linear-gradient(315deg, #9ccdff 0%, #a9c6e6 74%)',
           backgroundColor: '#dedede',
           position: 'absolute',
           top: '50%', left: '50%', borderRadius: '20px',
