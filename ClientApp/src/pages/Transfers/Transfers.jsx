@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { getAllPackage, deletePackage } from '../services/package.services'
+import { getAll, deleteItem } from '../../services/api.services'
 import CreateTransfer from './CreateTransfer'
 
 
@@ -8,7 +8,7 @@ import { Button } from '@material-ui/core'
 
 import ContactMailIcon from '@material-ui/icons/ContactMail'
 import AddIcon from '@material-ui/icons/Add'
-import Datatable from './Datatable'
+import Datatable from '../../components/Datatable'
 
 
 const Transfers = props => {
@@ -74,7 +74,7 @@ const Transfers = props => {
 
         clearform()
 
-        getAllPackage()
+        getAll('Transfer')
             .then(request => {
 
                 if (request && request.data && request.data[0] && request.data[0].id) {
@@ -123,7 +123,7 @@ const Transfers = props => {
 
         clearform()
 
-        deletePackage( itemDelete.id)
+        deleteItem( itemDelete.id)
             .then(() => {
                 cargaData()
 

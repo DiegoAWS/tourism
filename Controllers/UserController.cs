@@ -12,9 +12,10 @@ using Microsoft.AspNetCore.Authorization;
 using tourism.Services;
 using tourism.Models;
 using tourism.Models.Users;
-
 namespace tourism.Controllers
 {
+
+
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -36,7 +37,7 @@ namespace tourism.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]tourism.Models.Users.AuthenticateModel model)
+        public IActionResult Authenticate([FromBody] tourism.Models.Users.AuthenticateModel model)
         {
             var user = _userService.Authenticate(model.username, model.password);
 
@@ -69,7 +70,7 @@ namespace tourism.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register([FromBody]RegisterModel model)
+        public IActionResult Register([FromBody] RegisterModel model)
         {
             // map model to entity
             var user = _mapper.Map<User>(model);
@@ -95,6 +96,17 @@ namespace tourism.Controllers
             return Ok(model);
         }
 
+        [HttpGet("current")]
+        public IActionResult getCurrent()
+        {
+
+            var id = Int16.Parse( User.Identity.Name);
+            var user = _userService.GetById(id);
+            var model = _mapper.Map<UserModel>(user);
+
+            return Ok(model);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -104,7 +116,7 @@ namespace tourism.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UpdateModel model)
+        public IActionResult Update(int id, [FromBody] UpdateModel model)
         {
             // map model to entity and set id
             var user = _mapper.Map<User>(model);

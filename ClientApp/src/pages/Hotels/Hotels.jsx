@@ -8,7 +8,7 @@ import { Button } from '@material-ui/core'
 
 import ContactMailIcon from '@material-ui/icons/ContactMail'
 import AddIcon from '@material-ui/icons/Add'
-import Datatable from './Datatable'
+import Datatable from '../../components/Datatable'
 
 
 const Hotels = props => {

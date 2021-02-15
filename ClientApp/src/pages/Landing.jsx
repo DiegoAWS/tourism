@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,17 +7,24 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 import CubaPict from '../assets/img/cubatodo.jpg'
 import { login } from "../services/auth.services";
 import loadingGif from "../assets/img/loading.gif";
+import mainIcon from "../assets/img/icon.png"
+import beachPict from "../assets/img/beachPict.jpg"
 
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh',
+    },
+    imageRight: {
+        backgroundImage: `url(${beachPict})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'left',
     },
     image: {
         backgroundImage: `url(${CubaPict})`,
@@ -26,14 +33,19 @@ const useStyles = makeStyles((theme) => ({
         backgroundPosition: 'left',
     },
     paper: {
-        margin: theme.spacing(8, 4),
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
+        flexDirection: 'column',
+        backgroundColor: '#ffffffb3',
+        padding: 10,
+        borderRadius: 10,
+        margin: 50,
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: "blue",
+        height: 'initial',
+        width: 'initial'
     },
     form: {
         width: '100%',
@@ -79,12 +91,12 @@ export default function Landing({ history }) {
 
             if (res && res.status && res.status === 200) {
 
-                history.push("/dashboard");
+                history.push("/sales");
 
             } else {
                 errorHandler();
             }
-        }).catch(()=>{
+        }).catch(() => {
             errorHandler();
         })
     }
@@ -105,7 +117,7 @@ export default function Landing({ history }) {
     };
 
 
-    if (localStorage.getItem('usertoken')) {
+    if (localStorage.getItem('token')) {
         history.push('/dashboard')
         return null
     }
@@ -115,10 +127,11 @@ export default function Landing({ history }) {
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
             <Grid item xs={false} sm={4} md={7} className={classes.image} />
-            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+            <Grid item xs={12} sm={8} md={5} component={Paper} className={classes.imageRight}>
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
+
+                        <img src={mainIcon} alt="" />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Buro de Turismo

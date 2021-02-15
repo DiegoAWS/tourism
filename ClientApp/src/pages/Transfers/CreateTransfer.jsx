@@ -6,10 +6,10 @@ import es from 'date-fns/locale/es'
 import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import { createTransfer, updateTransfer } from '../services/transfer.services'
-import { dateToString, stringToDate } from '../helpers/timeConverter'
+import { createItem, updateItem } from '../../services/api.services'
+import { dateToString, stringToDate } from '../../helpers/timeConverter'
 
-import Popup from './Popup'
+import Popup from '../../components/Popup'
 
 registerLocale('es', es)
 setDefaultLocale('es')
@@ -60,10 +60,10 @@ const CreateTransfer = ({
 
         if (formData.id) {// Editing Transfer....
 
-            updateTransfer(formData.id, formData).then(() => { cargaData() })
+            updateItem(formData.id, formData,'Transfer').then(() => { cargaData() })
         }
         else { //creating Transfer
-            createTransfer(formData).then(() => { cargaData() })
+            createItem(formData).then(() => { cargaData() })
         }
 
 

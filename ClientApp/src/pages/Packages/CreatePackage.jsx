@@ -6,7 +6,7 @@ import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import DataTable, { createTheme } from 'react-data-table-component'
 import loadingGif from "../assets/img/loading.gif"
 import { createPackage, updatePackage } from '../services/package.services'
-import MyAutocomplete from './MyAutocomplete'
+import MyAutocomplete from '../../components/MyAutocomplete'
 import axios from 'axios'
 
 

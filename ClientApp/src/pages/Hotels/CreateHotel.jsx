@@ -7,9 +7,9 @@ import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import { createHotel, updateHotel } from '../services/hotel.services'
-import { dateToString, stringToDate } from '../helpers/timeConverter'
+import { dateToString, stringToDate } from '../../helpers/timeConverter'
 
-import Popup from './Popup'
+import Popup from '../../components/Popup'
 
 registerLocale('es', es)
 setDefaultLocale('es')

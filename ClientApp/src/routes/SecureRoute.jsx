@@ -5,41 +5,45 @@ import { withRouter, Route } from 'react-router-dom'
 
 import { getProfile, logout } from '../services/auth.services'
 
-const SecureRoute = ({ path,roles, component: Component, history }) => {
+const SecureRoute = ({ path, roles, component: Component, history }) => {
 
 
-    if (!localStorage.usertoken||!localStorage.userName||!localStorage.userRole) { 
+    if (!localStorage.token || !localStorage.username || !localStorage.role) {
 
-        localStorage.removeItem('userName')
-        localStorage.removeItem('userRole')
-        history.push('/')
+        logout()
         return null
     }
-    else{
+    else {
 
-    //Redireccion Inmediata si no existe algun Token
+        //Redireccion Inmediata si no existe algun Token
 
-    getProfile().then((response) => {
-
-        if (response && response.data && response.data.name === localStorage.userName
-            && response.data.email === localStorage.userRole && 
-            roles[0]==="ADMIN"// TODO verificar roles vs Nivel de Acceso Real
-        ) {
-
-            // All OK
-            console.log('Ruta ', path, ' Acceso Garanted a ', response.data.name)
+        getProfile().then((response) => {
 
 
-        }
-        else {
 
-            logout()
-        }
+            if (
+                response 
+                && response.data
+                && response.data.username === localStorage.username
+                && response.data.role === localStorage.role
+                && roles.includes(response.data.role)
+            ) {
 
-    })
-        .catch((err) => {
-            logout()
+                // All OK
+                // console.log('Ruta ', path, ' Acceso Garanted a ', response.data.username)
+
+
+            }
+            else {
+
+                history.push('/')
+            }
+
         })
+            .catch((err) => {
+                logout()
+            })
+
 
     }
 

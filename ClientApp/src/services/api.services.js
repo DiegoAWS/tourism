@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-const HOST = "https://jsonplaceholder.typicode.com"
+const HOST = "api/"
 
-export const getPackage = (id) => {
+export const getOne = (id,path) => {
     return axios
-        .get(HOST + "/posts/" + id, {
+        .get(HOST + path+"/" + id, {
             headers: {
-                Authorization: `Bearer ${localStorage.usertoken}`,
+                Authorization: `Bearer ${localStorage.token}`,
             },
         })
         .then((response) => {
@@ -17,11 +17,11 @@ export const getPackage = (id) => {
         });
 };
 
-export const getAllPackage = () => {
+export const getAll = (path) => {
     return axios
-        .get(HOST + "/posts", {
+        .get(HOST + path+"/", {
             headers: {
-                Authorization: `Bearer ${localStorage.usertoken}`,
+                Authorization: `Bearer ${localStorage.token}`,
             }
         })
         .then((response) => {
@@ -32,11 +32,11 @@ export const getAllPackage = () => {
         });
 };
 
-export const createPackage = (data) => {
+export const createItem = (data,path) => {
     return axios
-        .post(HOST + "/posts", data, {
+        .post(HOST + path+"/", data, {
             headers: {
-                Authorization: `Bearer ${localStorage.usertoken}`,
+                Authorization: `Bearer ${localStorage.token}`,
             }
         })
         .then((response) => {
@@ -47,11 +47,11 @@ export const createPackage = (data) => {
         });
 };
 
-export const updatePackage = (id,data) => {
+export const updateItem = (id,data,path) => {
     return axios
-        .put(HOST + "/posts/"+id, data, {
+        .put(HOST + path+"/"+id, data, {
             headers: {
-                Authorization: `Bearer ${localStorage.usertoken}`,
+                Authorization: `Bearer ${localStorage.token}`,
             }
         })
         .then((response) => {
@@ -62,11 +62,11 @@ export const updatePackage = (id,data) => {
         });
 };
 
-export const deletePackage = (id) => {
+export const deleteItem = (id,path) => {
     return axios
-        .delete(HOST + "/posts/" + id, {
+        .delete(HOST + path+"/" + id, {
             headers: {
-                Authorization: `Bearer ${localStorage.usertoken}`,
+                Authorization: `Bearer ${localStorage.token}`,
             },
         })
         .then((response) => {

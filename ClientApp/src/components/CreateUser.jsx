@@ -42,7 +42,7 @@ export default function CreateUser({ controlModal }) {
     const classes = useStyles();
 
     const [role, setRole] = useState('USER')
-    const [userName, setUserName] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [confPassword, setConfPassword] = useState('')
     const [loading, setLoading] = useState(false)
@@ -78,7 +78,7 @@ export default function CreateUser({ controlModal }) {
         }
         const user = {
             role,
-            userName,
+            username,
             password
         }
         register(user).then((res) => {
@@ -92,7 +92,7 @@ export default function CreateUser({ controlModal }) {
 
             } else {
                 setRole('USER')
-                setUserName('')
+                setUsername('')
                 setPassword('')
                 setConfPassword('')
                 setLoading(false)
@@ -141,8 +141,8 @@ export default function CreateUser({ controlModal }) {
                                 label="Nombre de Usuario"
                                 type="text"
                                 autoComplete="current-password"
-                                value={userName}
-                                onChange={(e) => { setUserName(e.target.value) }}
+                                value={username}
+                                onChange={(e) => { setUsername(e.target.value) }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
