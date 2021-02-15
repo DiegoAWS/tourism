@@ -11,47 +11,47 @@ namespace tourism.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransferController : ControllerBase
+    public class HotelController : ControllerBase
     {
         private readonly AppDBContext _context;
 
-        public TransferController(AppDBContext context)
+        public HotelController(AppDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Transfer
+        // GET: api/Hotel
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transfer>>> GetTransfer()
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotel()
         {
-            return await _context.Transfer.ToListAsync();
+            return await _context.Hotel.ToListAsync();
         }
 
-        // GET: api/Transfer/5
+        // GET: api/Hotel/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Transfer>> GetTransfer(long id)
+        public async Task<ActionResult<Hotel>> GetHotel(long id)
         {
-            var transfer = await _context.Transfer.FindAsync(id);
+            var hotel = await _context.Hotel.FindAsync(id);
 
-            if (transfer == null)
+            if (hotel == null)
             {
                 return NotFound();
             }
 
-            return transfer;
+            return hotel;
         }
 
-        // PUT: api/Transfer/5
+        // PUT: api/Hotel/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransfer(long id, Transfer transfer)
+        public async Task<IActionResult> PutHotel(long id, Hotel hotel)
         {
-            if (id != transfer.id)
+            if (id != hotel.id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(transfer).State = EntityState.Modified;
+            _context.Entry(hotel).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace tourism.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TransferExists(id))
+                if (!HotelExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace tourism.Controllers
             return NoContent();
         }
 
-        // POST: api/Transfer
+        // POST: api/Hotel
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Transfer>> PostTransfer(Transfer transfer)
+        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
         {
-            _context.Transfer.Add(transfer);
+            _context.Hotel.Add(hotel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTransfer", new { id = transfer.id }, transfer);
+            return CreatedAtAction("GetHotel", new { id = hotel.id }, hotel);
         }
 
-        // DELETE: api/Transfer/5
+        // DELETE: api/Hotel/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransfer(long id)
+        public async Task<IActionResult> DeleteHotel(long id)
         {
-            var transfer = await _context.Transfer.FindAsync(id);
-            if (transfer == null)
+            var hotel = await _context.Hotel.FindAsync(id);
+            if (hotel == null)
             {
                 return NotFound();
             }
 
-            _context.Transfer.Remove(transfer);
+            _context.Hotel.Remove(hotel);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool TransferExists(long id)
+        private bool HotelExists(long id)
         {
-            return _context.Transfer.Any(e => e.id == id);
+            return _context.Hotel.Any(e => e.id == id);
         }
     }
 }

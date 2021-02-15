@@ -11,47 +11,47 @@ namespace tourism.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransferController : ControllerBase
+    public class PackageController : ControllerBase
     {
         private readonly AppDBContext _context;
 
-        public TransferController(AppDBContext context)
+        public PackageController(AppDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Transfer
+        // GET: api/Package
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transfer>>> GetTransfer()
+        public async Task<ActionResult<IEnumerable<Package>>> GetPackage()
         {
-            return await _context.Transfer.ToListAsync();
+            return await _context.Package.ToListAsync();
         }
 
-        // GET: api/Transfer/5
+        // GET: api/Package/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Transfer>> GetTransfer(long id)
+        public async Task<ActionResult<Package>> GetPackage(long id)
         {
-            var transfer = await _context.Transfer.FindAsync(id);
+            var package = await _context.Package.FindAsync(id);
 
-            if (transfer == null)
+            if (package == null)
             {
                 return NotFound();
             }
 
-            return transfer;
+            return package;
         }
 
-        // PUT: api/Transfer/5
+        // PUT: api/Package/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransfer(long id, Transfer transfer)
+        public async Task<IActionResult> PutPackage(long id, Package package)
         {
-            if (id != transfer.id)
+            if (id != package.id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(transfer).State = EntityState.Modified;
+            _context.Entry(package).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace tourism.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TransferExists(id))
+                if (!PackageExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace tourism.Controllers
             return NoContent();
         }
 
-        // POST: api/Transfer
+        // POST: api/Package
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Transfer>> PostTransfer(Transfer transfer)
+        public async Task<ActionResult<Package>> PostPackage(Package package)
         {
-            _context.Transfer.Add(transfer);
+            _context.Package.Add(package);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTransfer", new { id = transfer.id }, transfer);
+            return CreatedAtAction("GetPackage", new { id = package.id }, package);
         }
 
-        // DELETE: api/Transfer/5
+        // DELETE: api/Package/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransfer(long id)
+        public async Task<IActionResult> DeletePackage(long id)
         {
-            var transfer = await _context.Transfer.FindAsync(id);
-            if (transfer == null)
+            var package = await _context.Package.FindAsync(id);
+            if (package == null)
             {
                 return NotFound();
             }
 
-            _context.Transfer.Remove(transfer);
+            _context.Package.Remove(package);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool TransferExists(long id)
+        private bool PackageExists(long id)
         {
-            return _context.Transfer.Any(e => e.id == id);
+            return _context.Package.Any(e => e.id == id);
         }
     }
 }

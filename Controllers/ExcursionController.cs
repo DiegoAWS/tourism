@@ -11,47 +11,47 @@ namespace tourism.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransferController : ControllerBase
+    public class ExcursionController : ControllerBase
     {
         private readonly AppDBContext _context;
 
-        public TransferController(AppDBContext context)
+        public ExcursionController(AppDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Transfer
+        // GET: api/Excursion
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transfer>>> GetTransfer()
+        public async Task<ActionResult<IEnumerable<Excursion>>> GetExcursion()
         {
-            return await _context.Transfer.ToListAsync();
+            return await _context.Excursion.ToListAsync();
         }
 
-        // GET: api/Transfer/5
+        // GET: api/Excursion/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Transfer>> GetTransfer(long id)
+        public async Task<ActionResult<Excursion>> GetExcursion(long id)
         {
-            var transfer = await _context.Transfer.FindAsync(id);
+            var excursion = await _context.Excursion.FindAsync(id);
 
-            if (transfer == null)
+            if (excursion == null)
             {
                 return NotFound();
             }
 
-            return transfer;
+            return excursion;
         }
 
-        // PUT: api/Transfer/5
+        // PUT: api/Excursion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransfer(long id, Transfer transfer)
+        public async Task<IActionResult> PutExcursion(long id, Excursion excursion)
         {
-            if (id != transfer.id)
+            if (id != excursion.id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(transfer).State = EntityState.Modified;
+            _context.Entry(excursion).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace tourism.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TransferExists(id))
+                if (!ExcursionExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace tourism.Controllers
             return NoContent();
         }
 
-        // POST: api/Transfer
+        // POST: api/Excursion
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Transfer>> PostTransfer(Transfer transfer)
+        public async Task<ActionResult<Excursion>> PostExcursion(Excursion excursion)
         {
-            _context.Transfer.Add(transfer);
+            _context.Excursion.Add(excursion);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTransfer", new { id = transfer.id }, transfer);
+            return CreatedAtAction("GetExcursion", new { id = excursion.id }, excursion);
         }
 
-        // DELETE: api/Transfer/5
+        // DELETE: api/Excursion/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransfer(long id)
+        public async Task<IActionResult> DeleteExcursion(long id)
         {
-            var transfer = await _context.Transfer.FindAsync(id);
-            if (transfer == null)
+            var excursion = await _context.Excursion.FindAsync(id);
+            if (excursion == null)
             {
                 return NotFound();
             }
 
-            _context.Transfer.Remove(transfer);
+            _context.Excursion.Remove(excursion);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool TransferExists(long id)
+        private bool ExcursionExists(long id)
         {
-            return _context.Transfer.Any(e => e.id == id);
+            return _context.Excursion.Any(e => e.id == id);
         }
     }
 }

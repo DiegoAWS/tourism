@@ -11,47 +11,47 @@ namespace tourism.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransferController : ControllerBase
+    public class SaleController : ControllerBase
     {
         private readonly AppDBContext _context;
 
-        public TransferController(AppDBContext context)
+        public SaleController(AppDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Transfer
+        // GET: api/Sale
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transfer>>> GetTransfer()
+        public async Task<ActionResult<IEnumerable<Sale>>> GetSale()
         {
-            return await _context.Transfer.ToListAsync();
+            return await _context.Sale.ToListAsync();
         }
 
-        // GET: api/Transfer/5
+        // GET: api/Sale/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Transfer>> GetTransfer(long id)
+        public async Task<ActionResult<Sale>> GetSale(long id)
         {
-            var transfer = await _context.Transfer.FindAsync(id);
+            var sale = await _context.Sale.FindAsync(id);
 
-            if (transfer == null)
+            if (sale == null)
             {
                 return NotFound();
             }
 
-            return transfer;
+            return sale;
         }
 
-        // PUT: api/Transfer/5
+        // PUT: api/Sale/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransfer(long id, Transfer transfer)
+        public async Task<IActionResult> PutSale(long id, Sale sale)
         {
-            if (id != transfer.id)
+            if (id != sale.id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(transfer).State = EntityState.Modified;
+            _context.Entry(sale).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace tourism.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TransferExists(id))
+                if (!SaleExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace tourism.Controllers
             return NoContent();
         }
 
-        // POST: api/Transfer
+        // POST: api/Sale
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Transfer>> PostTransfer(Transfer transfer)
+        public async Task<ActionResult<Sale>> PostSale(Sale sale)
         {
-            _context.Transfer.Add(transfer);
+            _context.Sale.Add(sale);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTransfer", new { id = transfer.id }, transfer);
+            return CreatedAtAction("GetSale", new { id = sale.id }, sale);
         }
 
-        // DELETE: api/Transfer/5
+        // DELETE: api/Sale/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransfer(long id)
+        public async Task<IActionResult> DeleteSale(long id)
         {
-            var transfer = await _context.Transfer.FindAsync(id);
-            if (transfer == null)
+            var sale = await _context.Sale.FindAsync(id);
+            if (sale == null)
             {
                 return NotFound();
             }
 
-            _context.Transfer.Remove(transfer);
+            _context.Sale.Remove(sale);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool TransferExists(long id)
+        private bool SaleExists(long id)
         {
-            return _context.Transfer.Any(e => e.id == id);
+            return _context.Sale.Any(e => e.id == id);
         }
     }
 }

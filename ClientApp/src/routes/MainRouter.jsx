@@ -19,12 +19,7 @@ export default function MainRouter() {
                 <Switch>
                     <Route exact path="/" component={Landing} />
                     <Route exact path="/register" component={CreateUser} />
-                    <SecureRoute exact path='/dashboard' roles={['ADMIN','USER']} component={Dashboard} />
-
-                    {/* Redirect en caso de 404 */}
-                    <Route path="*">
-                        <Redirect to="/" />
-                    </Route>
+                    <SecureRoute exact path='/dashboard' roles={['ADMIN', 'USER']} component={Dashboard} />
 
                 </Switch>
             </div>
