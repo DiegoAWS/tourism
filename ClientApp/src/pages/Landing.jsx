@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import {Link} from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
+
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -91,7 +92,7 @@ export default function Landing({ history }) {
 
             if (res && res.status && res.status === 200) {
 
-                history.push("/sales");
+                history.push("/dashboard");
 
             } else {
                 errorHandler();
@@ -183,6 +184,10 @@ export default function Landing({ history }) {
                                 )}
 
                         </Button>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Link to='/register' >Registrarse</Link>
+                            <a href='/api'> Api Swagger</a>
+                        </div>
                         <Box mt={5}>
                             <Copyright />
                         </Box>
@@ -197,9 +202,9 @@ function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://www.linkedin.com/in/diego-escobar-755638202/">
+            <a color="inherit" href="https://www.linkedin.com/in/diego-escobar-755638202/">
                 Diego Escobar
-      </Link>{' '}
+      </a>{' '}
             {new Date().getFullYear()}
             {'.'}
         </Typography>

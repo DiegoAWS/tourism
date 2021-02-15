@@ -175,7 +175,7 @@ const Packages = props => {
             <CreatePackage
                 openPopup={openPopup}
                 setOpenPopup={setOpenPopup}
-
+                clearform={clearform}
                 formData={formData}
                 setFormData={setFormData}
 

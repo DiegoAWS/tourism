@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 
 
@@ -52,4 +52,4 @@ const SecureRoute = ({ path, roles, component: Component, history }) => {
 
 
 }
-export default withRouter(SecureRoute)
+export default SecureRoute

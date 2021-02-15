@@ -17,7 +17,7 @@ registerLocale('es', es)
 setDefaultLocale('es')
 
 
-const CreateTransfer = ({
+const CreateExcursion = ({
 
 
     data, setData,
@@ -28,7 +28,9 @@ const CreateTransfer = ({
 }) => {
     const initForm = {
         title: '',
-        carType: 'BUS',
+        destination: '',
+        infoDestination: '',
+        offers:'',
 
         startTime: dateToString(new Date()),
         endTime: dateToString(new Date()),
@@ -39,25 +41,6 @@ const CreateTransfer = ({
     const [formData, setFormData] = useState(initForm)
     const [error, setError] = useState(false)
     const [timeError, setTimeError] = useState(false)
-
-    const carTypes = [
-        {
-            value: 'AUTO',
-            label: 'Auto',
-        },
-        {
-            value: 'TAXI',
-            label: 'Taxi',
-        },
-        {
-            value: 'BUS',
-            label: 'Bus',
-        },
-        {
-            value: 'MINI',
-            label: 'Mini',
-        },
-    ]
 
 
     const saveData = () => {
@@ -71,7 +54,7 @@ const CreateTransfer = ({
             }, 2000)
             return
         }
-
+    
 
         if (isBefore(stringToDate(formData.endTime), stringToDate(formData.startTime))) {
 
@@ -92,7 +75,7 @@ const CreateTransfer = ({
 
         setOpenPopup(false)
 
-        setData([...data, { ...formData, keyField: nanoid(), serviceType: 'TRANSFER' }])
+        setData([...data, { ...formData, keyField: nanoid(), serviceType: 'EXCURSION' }])
         setFormData(initForm)
 
     }
@@ -103,9 +86,9 @@ const CreateTransfer = ({
     }
 
     //#region return
-    const CustomDateInputStart = React.forwardRef(({ value, onClick }, ref) => (<TextField ref={ref} label='Fecha y Hora Inicio' error={timeError} variant="outlined" margin='normal' size="small" value={value} fullWidth onClick={onClick} />))
+    const CustomDateInputStart = React.forwardRef(({ value, onClick }, ref) => (<TextField ref={ref} label='Fecha y Hora Llegada' error={timeError} variant="outlined" margin='normal' size="small" value={value} fullWidth onClick={onClick} />))
 
-    const CustomDateInputEnd = React.forwardRef(({ value, onClick }, ref) => (<TextField ref={ref} label='Fecha y Hora de Llegada ' error={timeError} variant="outlined" margin='normal' size="small" value={value} fullWidth onClick={onClick} />))
+    const CustomDateInputEnd = React.forwardRef(({ value, onClick }, ref) => (<TextField ref={ref} label='Fecha y Hora de Salida ' error={timeError} variant="outlined" margin='normal' size="small" value={value} fullWidth onClick={onClick} />))
 
 
     return (
@@ -115,7 +98,7 @@ const CreateTransfer = ({
             setOpenPopup={setOpenPopup}
 
 
-            title={'Crear Reserva de Traslado'}
+            title={'Crear Reserva de Alojamiento'}
             discardData={discardData}
 
             saveData={saveData}>
@@ -127,7 +110,7 @@ const CreateTransfer = ({
 
                 <Grid item xs={12} sm={6} lg={4}>
 
-                    <TextField label={'Nombre del Transporte'} variant="outlined" margin='normal' size="small"
+                    <TextField label={'Nombre de la Excursión'} variant="outlined" margin='normal' size="small"
                         value={formData.title || ''} fullWidth required error={error}
                         onChange={e => { setFormData({ ...formData, title: e.target.value }) }} />
 
@@ -135,29 +118,29 @@ const CreateTransfer = ({
 
                 <Grid item xs={12} sm={6} lg={4}>
 
-                    <TextField
-                        label={'Tipo de Transporte'} variant="outlined" margin='normal' size="small"
-                        value={formData.carType || ''} fullWidth name="totalPrice" type="number"
-                        onChange={e => { setFormData({ ...formData, carType: e.target.value }) }}
-                        select
-                    >
-                        {carTypes.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </TextField>
-                </Grid>
+                    <TextField label={'Destinación'} variant="outlined" margin='normal' size="small"
+                        value={formData.destination || ''} fullWidth
+                        onChange={e => { setFormData({ ...formData, destination: e.target.value }) }} />
 
+                </Grid>
                 <Grid item xs={12} sm={6} lg={4}>
 
-                    <TextField label={'Lugar de Salida'} variant="outlined" margin='normal' size="small"
-                        value={formData.startPlace || ''} fullWidth required error={error}
-                        onChange={e => { setFormData({ ...formData, startPlace: e.target.value }) }} />
+                    <TextField label={'Información del Destino'} variant="outlined" margin='normal' size="small"
+                        value={formData.infoDestination || ''} fullWidth
+                        onChange={e => { setFormData({ ...formData, infoDestination: e.target.value }) }} />
 
                 </Grid>
 
-                <Grid item xs={12} sm={6} lg={4}>
+                <Grid item xs={12} sm={12} lg={4}>
+
+                    <TextField label={'Información de Contacto'} variant="outlined" margin='normal' size="small"
+                        value={formData.offers || ''} fullWidth
+                        onChange={e => { setFormData({ ...formData, offers: e.target.value }) }} />
+
+                </Grid>
+
+
+                <Grid item xs={12} sm={12} lg={4}>
 
                     <DatePicker
                         selected={stringToDate(formData.startTime)}
@@ -174,15 +157,9 @@ const CreateTransfer = ({
                     />
 
                 </Grid>
-                <Grid item xs={12} sm={6} lg={4}>
 
-                    <TextField label={'Lugar de Llegada'} variant="outlined" margin='normal' size="small"
-                        value={formData.endPlace || ''} fullWidth required error={error}
-                        onChange={e => { setFormData({ ...formData, endPlace: e.target.value }) }} />
 
-                </Grid>
-
-                <Grid item xs={12} sm={6} lg={4}>
+                <Grid item xs={12} sm={12} lg={4}>
 
                     <DatePicker
                         selected={stringToDate(formData.endTime)}
@@ -224,4 +201,4 @@ const CreateTransfer = ({
     //#endregion
 
 }
-export default CreateTransfer
+export default CreateExcursion

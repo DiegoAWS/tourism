@@ -1,8 +1,7 @@
-import React, { useCallback, useState, useEffect } from 'react'
-import { nanoid } from 'nanoid'
+import React, { useState } from 'react'
 
 
-import { Button, Dialog, DialogContent, Grid, Hidden, IconButton, InputAdornment, makeStyles, TextField, MenuItem } from '@material-ui/core'
+import { Button, Dialog, DialogContent, Grid, Hidden, IconButton, InputAdornment, makeStyles, TextField } from '@material-ui/core'
 
 import CloseIcon from '@material-ui/icons/Close'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
@@ -13,7 +12,7 @@ import DataTable, { createTheme } from 'react-data-table-component'
 
 import { createItem, updateItem } from '../../services/api.services'
 
-import loadingGif from '../../assets/img/loading.gif';
+
 import CreateHotel from './CreateHotel'
 import CreateTransfer from './CreateTransfer'
 
@@ -62,27 +61,8 @@ const useStyle = makeStyles((theme) => ({
 
 //#endregion makeStyle
 
-//#region Others
-
-const correctTitle = (serviceToAdd) => {
-    switch (serviceToAdd) {
-        case 'TRANSFER':
-            return 'traslado'
-
-        case 'HOTEL':
-            return 'alojamiento'
-
-        case 'EXCURSION':
-            return 'excursión'
-
-        default:
-            return ''
-    }
-}
-//#endregion
-
 const CreatePackage = ({
-    data, setData,
+    data, setData, clearform,
     formData, setFormData,
     openPopup, setOpenPopup,//Del PopUP
     cargaData, recolocaEditItem
@@ -98,70 +78,11 @@ const CreatePackage = ({
     const [transfersOpen, setTransfersOpen] = useState(false)
 
     const [excursions, setExcursions] = useState([])
-    const [excursionsOpen, setExcursionssOpen] = useState(false)
-
-    const [services, setServices] = useState([])
-
-
-
-    const [loading, setLoading] = useState(false)
-
+    const [excursionsOpen, setExcursionsOpen] = useState(false)
 
 
 
     //#endregion STATE
-
-
-    //#region useEffect
-
-
-    //#region auto
-    // AutoSearch for services to add
-    // useEffect(() => {
-    //     if (openPopup) {
-    //         let service = 'excursion'
-    //         setLoadingServices(true)
-
-    //         switch (serviceToAdd) {
-    //             case 'TRANSFER':
-    //                 service = 'transfer'
-    //                 break;
-    //             case 'HOTEL':
-    //                 service = 'hotel'
-    //                 break;
-    //             case 'EXCURSION':
-    //                 service = 'excursion'
-    //                 break;
-    //             default:
-    //                 break;
-    //         }
-    //         getAll(service).then(response => {
-    //             setLoadingServices(false)
-    //             if (response?.data && response.status === 200) {
-    //                 setServiceList(response.data)
-    //             }
-
-    //         })
-    //     }
-    // }, [serviceToAdd, openPopup])
-    //#endregion 
-
-    // Auto calcule Price
-    useEffect(() => {
-        if (openPopup) {
-            let priceTotal = 0
-
-            services.forEach(item => {
-                priceTotal += item.price
-            })
-            setFormData({ ...formData, price: priceTotal })
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [services])
-
-
-
-    //#endregion useEffect
 
 
 
@@ -257,28 +178,23 @@ const CreatePackage = ({
 
     //#region SAVEDATA
     const saveData = () => {
-        setOpenPopup(false)
 
 
-
-        if (data.length === 0) //If there is no Packages
-            setData([formData])
-        else//If we have packages
-            setData(data.concat(formData))
-
-        const transfers = services.filter(item => item.serviceType === "TRANSFER")
-
-        const hotels = services.filter(item => item.serviceType === "HOTEL")
-
-        const excursions = services.filter(item => item.serviceType === "EXCURSION")
 
         const dataOK = {
             title: formData.title,
             price: formData.price,
-            excursions: excursions.map(item => item.id).join('|'),
-            hotels: hotels.map(item => item.id).join('|'),
-            transfers: transfers.map(item => item.id).join('|')
+            excursions,
+            hotels,
+            transfers
         }
+
+        if (data.length === 0) //If there is no Packages
+            setData([dataOK])
+        else//If we have packages
+            setData(data.concat(dataOK))
+
+
 
         if (formData.id) {// Editing Package....
 
@@ -287,19 +203,16 @@ const CreatePackage = ({
         else { //creating Package
             createItem(dataOK, 'package').then(() => { cargaData() })
         }
+        setOpenPopup(false)
+        setHotels([])
+        setTransfers([])
+        setExcursions([])
+        clearform()
 
-        setServices([])
 
     }
     //#endregion SAVEDATA
 
-    //#region handleShowService
-
-    const handleShowService = (d) => {
-        alert('VER ', d)
-    }
-
-    //#endregion handleShowService
 
     return (
         <Dialog disableBackdropClick disableEscapeKeyDown open={openPopup} maxWidth={'lg'} fullWidth
@@ -307,7 +220,11 @@ const CreatePackage = ({
             <IconButton classes={{ root: classes.closeIcon }} onClick={() => {
                 formData.id && recolocaEditItem()
                 setOpenPopup(false)
-                setServices([])
+                setHotels([])
+                setTransfers([])
+                setExcursions([])
+                clearform()
+
             }} >  <CloseIcon /> </IconButton>
             <DialogContent classes={{ root: classes.dialogRoot }}>
                 {
@@ -337,7 +254,7 @@ const CreatePackage = ({
 
                         <Button color="secondary" fullWidth
                             variant="contained"
-                            disabled={formData?.title?.length === 0 || services?.length === 0}
+                            disabled={formData?.title?.length === 0 || (transfers?.length === 0 && hotels?.length === 0 && excursions?.length === 0)}
                             onClick={() => { saveData() }} >
                             <Hidden xsDown >
                                 Vender</Hidden>
@@ -350,7 +267,7 @@ const CreatePackage = ({
 
                         <Button color="primary" fullWidth
                             variant="contained"
-                            disabled={formData?.title?.length === 0 || services?.length === 0}
+                            disabled={formData?.title?.length === 0 || (transfers?.length === 0 && hotels?.length === 0 && excursions?.length === 0)}
                             onClick={() => { saveData() }} >
                             <Hidden xsDown >
                                 Guardar</Hidden>
@@ -397,7 +314,7 @@ const CreatePackage = ({
                     <Grid item xs={12} sm={6} md={3}>
                         <Button color="primary" fullWidth
                             variant="contained"
-                            onClick={() => { setExcursionssOpen(true) }} >
+                            onClick={() => { setExcursionsOpen(true) }} >
                             <AddIcon />
                              Excursión
                         </Button>
@@ -438,9 +355,9 @@ const CreatePackage = ({
                         highlightOnHover
                         dense
                         noHeader
-                        onRowClicked={useCallback(handleShowService, [handleShowService])}
+                        // onRowClicked={useCallback(handleShowService, [handleShowService])}
                         responsive
-                        noDataComponent={!loading ? <div><hr /><h3>Sin Resultados que mostrar <sup>*</sup> </h3><hr /></div> : <img src={loadingGif} width='20px' alt='' />}
+                        noDataComponent={<div><hr /><h3>Sin Resultados que mostrar <sup>*</sup> </h3><hr /></div>}
                         paginationComponentOptions={{
                             rowsPerPageText: 'Filas por Pagina:',
                             rangeSeparatorText: 'de'
@@ -465,7 +382,12 @@ const CreatePackage = ({
                     openPopup={transfersOpen}
                     setOpenPopup={setTransfersOpen}
                 />
-
+                <CreateTransfer
+                    data={excursions}
+                    setData={setExcursions}
+                    openPopup={excursionsOpen}
+                    setOpenPopup={setExcursionsOpen}
+                />
 
             </DialogContent>
         </Dialog >

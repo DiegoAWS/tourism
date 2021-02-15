@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,13 +14,27 @@ import { register } from '../services/auth.services'
 
 import loadingGif from "../assets/img/loading.gif";
 
+import bgImage from "../assets/img/beachPict.jpg"
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        backgroundColor: 'white',
-        borderRadius: '15px'
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+
+        display: 'flex',
+        height: '100vh',
+        width: '100vw',
+        maxWidth: '100vw',
+        justifyContent: 'center',
+        alignItems: 'center',
+
     },
     paper: {
+        borderRadius: '15px',
+        padding:'20px',
+        backgroundColor: '#b8d8ff75',
+        maxWidth: '450px',
         marginTop: theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
@@ -38,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function CreateUser({ controlModal }) {
+export default function CreateUser( history) {
     const classes = useStyles();
 
     const [role, setRole] = useState('USER')
@@ -82,13 +97,14 @@ export default function CreateUser({ controlModal }) {
             password
         }
         register(user).then((res) => {
-      
-            if (res && res.status && res.status === 201) {
 
-                setLoading(false)
+          
+            if (res?.status === 200) {
 
-                controlModal(false)
-                window.alert('Usuario Creado con Éxito!!')
+               
+
+                window.location.replace(window.location.origin);
+
 
             } else {
                 setRole('USER')
@@ -192,7 +208,7 @@ export default function CreateUser({ controlModal }) {
                     </Button>
                 </form>
             </div>
-           
+
         </Container>
     );
 }

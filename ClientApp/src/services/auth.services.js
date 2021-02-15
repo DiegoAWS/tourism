@@ -22,7 +22,7 @@ export const getProfile = () => {
 
 export const register = (newUser) => {
   return axios
-    .post(HOST + "", newUser)
+    .post(HOST + "register", newUser)
     .then((response) => {
       return response;
     })

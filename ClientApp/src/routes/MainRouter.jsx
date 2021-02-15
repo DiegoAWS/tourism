@@ -1,9 +1,10 @@
 import React from "react";
 import {
-    BrowserRouter as Router,
+   
     Switch,
     Route,
-    Redirect
+    Redirect,
+    withRouter
 } from "react-router-dom";
 
 import Landing from '../pages/Landing'
@@ -15,9 +16,9 @@ import Sales from "../pages/Sales/Sales"
 import Packages from "../pages/Packages/Packages";
 
 
-export default function MainRouter() {
+export default withRouter(function MainRouter() {
     return (
-        <Router>
+       
            
             <div>
                 <Switch>
@@ -33,7 +34,7 @@ export default function MainRouter() {
                     <Route path="*"><Redirect to="/" /></Route>
                 </Switch>
             </div>
-        </Router>
+   
     );
-}
+})
 

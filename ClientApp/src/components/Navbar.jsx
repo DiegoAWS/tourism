@@ -8,10 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 import MenuIcon from '@material-ui/icons/Menu';
-import AirportShuttleIcon from '@material-ui/icons/AirportShuttle';
 import ShopIcon from '@material-ui/icons/Shop';
-import FilterHdrIcon from '@material-ui/icons/FilterHdr';
-import HotelIcon from '@material-ui/icons/Hotel';
 import BookmarksIcon from '@material-ui/icons/Bookmarks';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
@@ -136,12 +133,12 @@ const Navbar = ({ history }) => {
                                 <Hidden smUp>
                                     <MenuItem onClick={() => { history.push('/sales') }}><ShopIcon /> Historial Ventas </MenuItem>
                                 </Hidden>
-                        
+                                <hr style={{width:'85%'}} />
 
                                 {localStorage.role === "ADMIN" &&
                                     <MenuItem onClick={() => {
                                         handleClose()
-                                        setOpenModal(true)
+                                        history.push('/register')
                                     }}>
                                         <AccountCircle /> Crear Usuario
                                     </MenuItem>
