@@ -10,6 +10,7 @@ import ContactMailIcon from '@material-ui/icons/ContactMail'
 import AddIcon from '@material-ui/icons/Add'
 import Datatable from '../../components/Datatable'
 import Navbar from '../../components/Navbar'
+import CreateSales from './CreateSales'
 
 const Packages = props => {
 
@@ -19,7 +20,7 @@ const Packages = props => {
 
 
     const [openPopup, setOpenPopup] = useState(false)
-
+    const [openPopupSell, setOpenPopupSell] = useState(false)
     const [sinDatos, SetSinDatos] = useState(false)
     const [data, setData] = useState([]) //Data de la tabla
 
@@ -151,7 +152,7 @@ const Packages = props => {
 
     return (
         <>
-        <Navbar/>
+            <Navbar />
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
                 <div>
@@ -161,6 +162,7 @@ const Packages = props => {
                         onClick={() => { clearform(); setOpenPopup(true) }} > Añadir Paquete </Button>
 
                 </div>
+                <h2 style={{flexGrow:1,textAlign:'center'}}>Paquetes Turísticos</h2>
             </div>
 
             <Datatable data={data}
@@ -184,6 +186,15 @@ const Packages = props => {
 
                 recolocaEditItem={recolocaEditItem}
                 cargaData={cargaData}
+            />
+
+            <CreateSales
+
+
+                openPopup={openPopupSell}
+                setOpenPopup={setOpenPopupSell}
+
+                packageItem
             />
 
         </>

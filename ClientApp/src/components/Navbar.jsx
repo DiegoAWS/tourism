@@ -51,7 +51,7 @@ const theme = createMuiTheme({
     },
 });
 
-const Navbar = ({ history }) => {
+const Navbar = ({ history,location }) => {
 
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -90,10 +90,10 @@ const Navbar = ({ history }) => {
 
                         <div className={classes.buttonsPlaceholder}>
                             <Hidden xsDown>
-                                <Button variant="contained" color="primary" onClick={() => { history.push('/dashboard') }}><BookmarksIcon /> Principal </Button>
+                                <Button variant="contained" disabled={location.pathname==='/dashboard'} color="primary" onClick={() => { history.push('/dashboard') }}><BookmarksIcon /> Principal </Button>
                             </Hidden>
                             <Hidden xsDown>
-                                <Button variant="contained" color="primary" onClick={() => { history.push('/sales') }}><ShopIcon /> Historial Ventas </Button>
+                                <Button variant="contained" disabled={location.pathname==='/sales'} color="primary" onClick={() => { history.push('/sales') }}><ShopIcon /> Historial Ventas </Button>
                             </Hidden>
                          
                         </div>
@@ -127,11 +127,15 @@ const Navbar = ({ history }) => {
 
 
                                 <Hidden smUp>
-                                    <MenuItem onClick={() => { history.push('/dashboard') }}><BookmarksIcon /> Principal </MenuItem>
+                                    <MenuItem onClick={() => { history.push('/dashboard') }}
+                                    disabled={location.pathname==='/dashboard'} 
+                                    ><BookmarksIcon /> Principal </MenuItem>
                                 </Hidden>
 
                                 <Hidden smUp>
-                                    <MenuItem onClick={() => { history.push('/sales') }}><ShopIcon /> Historial Ventas </MenuItem>
+                                    <MenuItem onClick={() => { history.push('/sales') }}
+                                    disabled={location.pathname==='/sales'} 
+                                    ><ShopIcon /> Historial Ventas </MenuItem>
                                 </Hidden>
                                 <hr style={{width:'85%'}} />
 

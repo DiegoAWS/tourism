@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect} from 'react'
 import { getAll, deleteItem } from '../../services/api.services'
 
 import Datatable from '../../components/Datatable'
 import Navbar from '../../components/Navbar'
 
-const Sales = props => {
+const Sales = () => {
 
 
 
     //#region  CONST's ----------------------------------
-
-
-    const [openPopup, setOpenPopup] = useState(false)
 
     const [sinDatos, SetSinDatos] = useState(false)
     const [data, setData] = useState([]) //Data de la tabla
@@ -24,7 +21,8 @@ const Sales = props => {
     const camposPaquete = [
 
         ['title', 'Nombre del Paquete'],
-        ['price', 'Precio Total'],
+        ['client','Nombre del Cliente'],
+        ['price', 'Precio Total']
     ]
 
     if (localStorage.role === "ADMIN")
@@ -32,32 +30,7 @@ const Sales = props => {
     //#endregion campos Paquete
 
 
-
-    //#region  Inicializing the Form ----------------------------------
-
-
-
-
-    var formInit = {
-        id: null,
-        title: '',
-        transfers: [],
-        hotels: [],
-        excursions: [],
-        price: 0
-    }
-
-
-
-    //#endregion Inicializing the Form
-    const [formData, setFormData] = useState(formInit)
-
-
-
-    const editingValue = useRef({})
-
-
-
+  
     //#endregion CONST's
 
     // eslint-disable-next-line
@@ -69,7 +42,7 @@ const Sales = props => {
 
     const cargaData = () => {
 
-        clearform()
+       
 
         getAll('Sale')
             .then(response => {
@@ -85,28 +58,12 @@ const Sales = props => {
             })
     }
 
-    const editData = (item) => {
-
-        editingValue.current = item
-
-        var temp = data.filter(it => it.id !== item.id)
-
-
-        setData(temp)
-
-        setFormData(item)
-        setOpenPopup(true)
-
-
-
-    }
 
     const deleteData = (itemDelete) => {
 
 
         setData(data.filter(it => it.id !== itemDelete.id))
 
-        clearform()
 
         deleteItem(itemDelete.id, 'Sale')
             .then(() => {
@@ -121,20 +78,7 @@ const Sales = props => {
 
 
 
-    //#region  Others Functions ----------------------------------
-
-    const clearform = () => {
-
-        editingValue.current = {}
-        setFormData(formInit)
-
-    }
-    const recolocaEditItem = () => {
-        setData(data.concat(editingValue.current))
-    }
-    //#endregion Others Functions
-
-
+    
 
 
     //#region  Return ----------------------------------
@@ -146,7 +90,7 @@ const Sales = props => {
         <>
         <Navbar/>
             
-
+<h2>Historial de Ventas</h2>
             <Datatable data={data}
 
                 sinDatos={sinDatos}
@@ -154,7 +98,7 @@ const Sales = props => {
                 campos={camposPaquete}
                 responsive
                 handleDelete={deleteData}
-                handleEdit={editData} />
+                handleEdit={()=>{}} />
 
         
         </>

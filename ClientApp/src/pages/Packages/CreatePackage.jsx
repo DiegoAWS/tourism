@@ -122,7 +122,19 @@ const CreatePackage = ({
 
     }, [formData?.id])
 
+
+    useEffect(() => {
+        let totalPrice = 0
+        hotels.forEach(item => { totalPrice = +item.price })
+        transfers.forEach(item => { totalPrice = +item.price })
+        excursions.forEach(item => { totalPrice = +item.price })
+
+        setFormData({ ...formData, price: totalPrice })
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[hotels,transfers,excursions])
     //#endregion
+
 
 
 
@@ -227,7 +239,7 @@ const CreatePackage = ({
     //#endregion
 
     //#region SAVEDATA
-    const saveData = () => {
+    const saveData = (andSell) => {
 
 
 
@@ -248,10 +260,17 @@ const CreatePackage = ({
 
         if (formData.id) {// Editing Package....
 
-            updateItem(formData.id, { ...dataOK, id: formData.id }, 'package').then(() => { cargaData() })
+            updateItem(formData.id, { ...dataOK, id: formData.id }, 'package').then(() => {
+                cargaData()
+
+            })
         }
         else { //creating Package
-            createItem(dataOK, 'package').then(() => { cargaData() })
+            createItem(dataOK, 'package').then(() => {
+
+                cargaData()
+
+            })
         }
         setOpenPopup(false)
         setHotels([])
@@ -286,7 +305,7 @@ const CreatePackage = ({
 
                     <Grid item xs={12} md={3} >
                         <div className={classes.dialogTitle}>
-                            {(formData.id) ? 'Editar Paquete' : 'Crear Paquete'}
+                            {(formData.id) ? ' Paquete' : 'Crear Paquete Nuevo'}
                         </div>
 
                     </Grid>
@@ -305,7 +324,7 @@ const CreatePackage = ({
                         <Button color="secondary" fullWidth
                             variant="contained"
                             disabled={formData?.title?.length === 0 || (transfers?.length === 0 && hotels?.length === 0 && excursions?.length === 0)}
-                            onClick={() => { saveData() }} >
+                            onClick={() => { saveData(true) }} >
                             <Hidden xsDown >
                                 Vender</Hidden>
                             <SaveAltIcon />
@@ -318,7 +337,7 @@ const CreatePackage = ({
                         <Button color="primary" fullWidth
                             variant="contained"
                             disabled={formData?.title?.length === 0 || (transfers?.length === 0 && hotels?.length === 0 && excursions?.length === 0)}
-                            onClick={() => { saveData() }} >
+                            onClick={() => { saveData(false) }} >
                             <Hidden xsDown >
                                 Guardar</Hidden>
                             <SaveAltIcon />
@@ -407,7 +426,7 @@ const CreatePackage = ({
                         noHeader
                         // onRowClicked={useCallback(handleShowService, [handleShowService])}
                         responsive
-                        noDataComponent={loadingTable?  <img src={loadingGif} width='20px' alt='' />:<div><hr /><h3>Sin Resultados que mostrar <sup>*</sup> </h3><hr /></div>}
+                        noDataComponent={loadingTable ? <img src={loadingGif} width='20px' alt='' /> : <div><hr /><h3>Sin Resultados que mostrar <sup>*</sup> </h3><hr /></div>}
                         paginationComponentOptions={{
                             rowsPerPageText: 'Filas por Pagina:',
                             rangeSeparatorText: 'de'
