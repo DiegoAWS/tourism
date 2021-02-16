@@ -27,18 +27,23 @@ namespace tourism.Controllers
             return await _context.Hotel.ToListAsync();
         }
 
-        // GET: api/Hotel/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Hotel>> GetHotel(long id)
+        // GET: api/Transfer/5
+        [HttpGet("{fk}")]
+        public async Task<List<Hotel>> GetTransfer(long fk)
         {
-            var hotel = await _context.Hotel.FindAsync(id);
+
+            var hotel = from s in _context.Hotel select s;
+
+
+            hotel = hotel.Where(s => s.PackageId == fk);
+
 
             if (hotel == null)
             {
-                return NotFound();
+                return null;
             }
 
-            return hotel;
+            return await hotel.ToListAsync();
         }
 
         // PUT: api/Hotel/5

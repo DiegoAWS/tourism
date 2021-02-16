@@ -28,17 +28,20 @@ namespace tourism.Controllers
         }
 
         // GET: api/Excursion/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Excursion>> GetExcursion(long id)
+        [HttpGet("{fk}")]
+        public async Task<List<Excursion>> GetTransfer(long fk)
         {
-            var excursion = await _context.Excursion.FindAsync(id);
+            var excursions = from s in _context.Excursion select s;
 
-            if (excursion == null)
+            excursions = excursions.Where(s => s.PackageId == fk);
+
+
+            if (excursions == null)
             {
-                return NotFound();
+                return null;
             }
 
-            return excursion;
+            return await excursions.ToListAsync();
         }
 
         // PUT: api/Excursion/5

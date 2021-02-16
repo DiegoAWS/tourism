@@ -22,7 +22,7 @@ namespace tourism.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("Packageid")
+                    b.Property<long>("PackageId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("destination")
@@ -31,13 +31,7 @@ namespace tourism.Migrations
                     b.Property<string>("endTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("idSalesMan")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("infoDestination")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("nameSalesMan")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("offers")
@@ -54,7 +48,7 @@ namespace tourism.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Packageid");
+                    b.HasIndex("PackageId");
 
                     b.ToTable("Excursion");
                 });
@@ -65,19 +59,13 @@ namespace tourism.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("Packageid")
+                    b.Property<long>("PackageId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("contact")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("endTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("idSalesMan")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("nameSalesMan")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("placement")
@@ -94,7 +82,7 @@ namespace tourism.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Packageid");
+                    b.HasIndex("PackageId");
 
                     b.ToTable("Hotel");
                 });
@@ -104,6 +92,12 @@ namespace tourism.Migrations
                     b.Property<long>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<long>("idSalesMan")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("nameSalesMan")
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("price")
                         .HasColumnType("TEXT");
@@ -120,9 +114,6 @@ namespace tourism.Migrations
                 {
                     b.Property<long>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("Packageid")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("agency")
@@ -166,8 +157,6 @@ namespace tourism.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Packageid");
-
                     b.ToTable("Sale");
                 });
 
@@ -177,19 +166,13 @@ namespace tourism.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("Packageid")
+                    b.Property<long>("PackageId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("endPlace")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("endTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("idSalesMan")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("nameSalesMan")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("price")
@@ -212,7 +195,7 @@ namespace tourism.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Packageid");
+                    b.HasIndex("PackageId");
 
                     b.ToTable("Transfer");
                 });
@@ -240,34 +223,48 @@ namespace tourism.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("tourism.Models.Users.UserModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("role")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("username")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("id");
+
+                    b.ToTable("UserModel");
+                });
+
             modelBuilder.Entity("tourism.Models.Excursion", b =>
                 {
                     b.HasOne("tourism.Models.Package", null)
                         .WithMany("Excursions")
-                        .HasForeignKey("Packageid");
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("tourism.Models.Hotel", b =>
                 {
                     b.HasOne("tourism.Models.Package", null)
                         .WithMany("Hotels")
-                        .HasForeignKey("Packageid");
-                });
-
-            modelBuilder.Entity("tourism.Models.Sale", b =>
-                {
-                    b.HasOne("tourism.Models.Package", "Package")
-                        .WithMany()
-                        .HasForeignKey("Packageid");
-
-                    b.Navigation("Package");
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("tourism.Models.Transfer", b =>
                 {
                     b.HasOne("tourism.Models.Package", null)
                         .WithMany("Transfers")
-                        .HasForeignKey("Packageid");
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("tourism.Models.Package", b =>

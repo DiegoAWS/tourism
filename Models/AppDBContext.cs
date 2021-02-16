@@ -33,5 +33,22 @@ namespace tourism.Models
         public DbSet<tourism.Models.Sale> Sale { get; set; }
 
         public DbSet<User> Users { get; set; }
+public DbSet<tourism.Models.Users.UserModel> UserModel { get; set; }
+
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Package>()
+            .HasMany(t => t.Transfers)
+            .WithOne();
+
+              modelBuilder.Entity<Package>()
+            .HasMany(t => t.Hotels)
+            .WithOne();
+
+              modelBuilder.Entity<Package>()
+            .HasMany(t => t.Excursions)
+            .WithOne();
+    }
+
     }
 }

@@ -9,8 +9,8 @@ using tourism.Models;
 namespace tourism.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20210215062224_AuthAdded")]
-    partial class AuthAdded
+    [Migration("20210216021327_reStartMigrations")]
+    partial class reStartMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace tourism.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("Packageid")
+                    b.Property<long>("PackageId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("destination")
@@ -56,7 +56,7 @@ namespace tourism.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Packageid");
+                    b.HasIndex("PackageId");
 
                     b.ToTable("Excursion");
                 });
@@ -67,7 +67,7 @@ namespace tourism.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("Packageid")
+                    b.Property<long>("PackageId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("contact")
@@ -96,7 +96,7 @@ namespace tourism.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Packageid");
+                    b.HasIndex("PackageId");
 
                     b.ToTable("Hotel");
                 });
@@ -122,9 +122,6 @@ namespace tourism.Migrations
                 {
                     b.Property<long>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("Packageid")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("agency")
@@ -168,8 +165,6 @@ namespace tourism.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Packageid");
-
                     b.ToTable("Sale");
                 });
 
@@ -179,7 +174,7 @@ namespace tourism.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("Packageid")
+                    b.Property<long>("PackageId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("endPlace")
@@ -214,27 +209,30 @@ namespace tourism.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("Packageid");
+                    b.HasIndex("PackageId");
 
                     b.ToTable("Transfer");
                 });
 
             modelBuilder.Entity("tourism.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ROLE")
-                        .HasColumnType("TEXT");
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("BLOB");
 
-                    b.Property<string>("password")
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("role")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("username")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
                     b.ToTable("Users");
                 });
@@ -243,30 +241,27 @@ namespace tourism.Migrations
                 {
                     b.HasOne("tourism.Models.Package", null)
                         .WithMany("Excursions")
-                        .HasForeignKey("Packageid");
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("tourism.Models.Hotel", b =>
                 {
                     b.HasOne("tourism.Models.Package", null)
                         .WithMany("Hotels")
-                        .HasForeignKey("Packageid");
-                });
-
-            modelBuilder.Entity("tourism.Models.Sale", b =>
-                {
-                    b.HasOne("tourism.Models.Package", "Package")
-                        .WithMany()
-                        .HasForeignKey("Packageid");
-
-                    b.Navigation("Package");
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("tourism.Models.Transfer", b =>
                 {
                     b.HasOne("tourism.Models.Package", null)
                         .WithMany("Transfers")
-                        .HasForeignKey("Packageid");
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("tourism.Models.Package", b =>

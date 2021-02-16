@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const HOST = "api/"
 
-export const getOne = (id,path) => {
+export const getOneToMany = (id,path) => {
     return axios
         .get(HOST + path+"/" + id, {
             headers: {

@@ -19,7 +19,6 @@ namespace tourism.Models
         public decimal totalPrice { get; set; }
         public decimal finalPrive { get; set; }
 
-         public Package Package { get; set; }
 
     }
 }

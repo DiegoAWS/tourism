@@ -98,7 +98,7 @@ const CreateExcursion = ({
             setOpenPopup={setOpenPopup}
 
 
-            title={'Crear Reserva de Alojamiento'}
+            title={'Crear Excursión'}
             discardData={discardData}
 
             saveData={saveData}>
@@ -123,7 +123,7 @@ const CreateExcursion = ({
                         onChange={e => { setFormData({ ...formData, destination: e.target.value }) }} />
 
                 </Grid>
-                <Grid item xs={12} sm={6} lg={4}>
+                <Grid item xs={12} >
 
                     <TextField label={'Información del Destino'} variant="outlined" margin='normal' size="small"
                         value={formData.infoDestination || ''} fullWidth
@@ -131,7 +131,7 @@ const CreateExcursion = ({
 
                 </Grid>
 
-                <Grid item xs={12} sm={12} lg={4}>
+                <Grid item xs={12} sm={6} lg={4}>
 
                     <TextField label={'Información de Contacto'} variant="outlined" margin='normal' size="small"
                         value={formData.offers || ''} fullWidth
@@ -140,7 +140,7 @@ const CreateExcursion = ({
                 </Grid>
 
 
-                <Grid item xs={12} sm={12} lg={4}>
+                <Grid item xs={12} sm={6} lg={4}>
 
                     <DatePicker
                         selected={stringToDate(formData.startTime)}
@@ -159,7 +159,7 @@ const CreateExcursion = ({
                 </Grid>
 
 
-                <Grid item xs={12} sm={12} lg={4}>
+                <Grid item xs={12} sm={6} lg={4}>
 
                     <DatePicker
                         selected={stringToDate(formData.endTime)}
@@ -178,7 +178,7 @@ const CreateExcursion = ({
 
                 </Grid>
 
-                <Grid item xs={12} >
+                <Grid item xs={12} sm={6} lg={4}>
 
                     <TextField label={'Precio'} variant="outlined" margin='normal' size="small"
                         value={formData.price || ''} fullWidth tipe="number" required error={error}

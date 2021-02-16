@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using tourism.Models;
+using tourism.Models.Users;
+
 
 namespace tourism.Controllers
 {
@@ -73,10 +75,17 @@ namespace tourism.Controllers
         }
 
         // POST: api/Package
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
         public async Task<ActionResult<Package>> PostPackage(Package package)
         {
+            var id = Int16.Parse(User.Identity.Name);
+            var user = _context.UserModel.Find(id);
+
+            package.idSalesMan = user.id;
+            package.nameSalesMan = user.username;
+
+
             _context.Package.Add(package);
             await _context.SaveChangesAsync();
 

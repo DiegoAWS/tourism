@@ -92,7 +92,7 @@ const CreateSales = ({
 
                 <Grid item xs={12} sm={6} lg={4}>
 
-                    <TextField label={'Nombre de la Excursión'} variant="outlined" margin='normal' size="small"
+                    <TextField label={'Nombre del Paquete'} variant="outlined" margin='normal' size="small"
                         value={formData.title} fullWidth required only
                     />
 

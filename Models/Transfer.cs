@@ -7,11 +7,11 @@ namespace tourism.Models
         public string startTime { get; set; }
         public string endTime { get; set; }
         public decimal price { get; set; }
-        public long idSalesMan { get; set; }
-        public string nameSalesMan { get; set; }
         public string type { get; set; }
         public string startPlace { get; set; }
         public string endPlace { get; set; }
         public string stops { get; set; }
+        public long PackageId { get; set; }
+
     }
 }

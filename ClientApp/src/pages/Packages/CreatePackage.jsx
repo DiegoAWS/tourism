@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 
 import { Button, Dialog, DialogContent, Grid, Hidden, IconButton, InputAdornment, makeStyles, TextField } from '@material-ui/core'
@@ -10,13 +10,14 @@ import AddIcon from '@material-ui/icons/Add';
 import DataTable, { createTheme } from 'react-data-table-component'
 
 
-import { createItem, updateItem } from '../../services/api.services'
+import { getOneToMany, createItem, updateItem } from '../../services/api.services'
 
 
 import CreateHotel from './CreateHotel'
 import CreateTransfer from './CreateTransfer'
+import CreateExcursion from './CreateExcursion'
 
-
+import loadingGif from '../../assets/img/loading.gif'
 
 //#region makeStyle
 const useStyle = makeStyles((theme) => ({
@@ -80,10 +81,48 @@ const CreatePackage = ({
     const [excursions, setExcursions] = useState([])
     const [excursionsOpen, setExcursionsOpen] = useState(false)
 
-
+    const [loadingTable, setLoadingTable] = useState(false)
 
     //#endregion STATE
 
+
+    //#region useEffect
+
+    useEffect(() => {
+
+
+        if (!!formData?.id) {
+
+            setLoadingTable(true)
+
+            getOneToMany(formData.id, 'Transfer')
+                .then(respT => {
+                    if (respT?.data && respT.status === 200)
+                        setTransfers(respT.data)
+
+                    getOneToMany(formData.id, 'Hotel')
+                        .then(respH => {
+                            if (respH?.data && respH.status === 200)
+                                setHotels(respH.data)
+
+                            getOneToMany(formData.id, 'Excursion')
+                                .then(respE => {
+                                    if (respE?.data && respE.status === 200)
+                                        setExcursions(respE.data)
+
+                                    setLoadingTable(false)
+                                })
+                        })
+                })
+
+
+
+        }
+
+
+    }, [formData?.id])
+
+    //#endregion
 
 
 
@@ -98,9 +137,20 @@ const CreatePackage = ({
                 size="small" title='Quitar Servicio' color="secondary"
                 variant="contained"
                 onClick={e => {
-                    console.log('ROW', row)
                     if (window.confirm("¿Seguro que desea Quitar este ítem?")) {
-
+                        switch (row.serviceType) {
+                            case 'EXCURSION':
+                                setExcursions(excursions.filter(item => item.keyField !== row.keyField))
+                                break;
+                            case 'TRANSFER':
+                                setTransfers(transfers.filter(item => item.keyField !== row.keyField))
+                                break;
+                            case 'HOTEL':
+                                setHotels(hotels.filter(item => item.keyField !== row.keyField))
+                                break;
+                            default:
+                                break;
+                        }
 
                     }
                 }}>
@@ -357,7 +407,7 @@ const CreatePackage = ({
                         noHeader
                         // onRowClicked={useCallback(handleShowService, [handleShowService])}
                         responsive
-                        noDataComponent={<div><hr /><h3>Sin Resultados que mostrar <sup>*</sup> </h3><hr /></div>}
+                        noDataComponent={loadingTable?  <img src={loadingGif} width='20px' alt='' />:<div><hr /><h3>Sin Resultados que mostrar <sup>*</sup> </h3><hr /></div>}
                         paginationComponentOptions={{
                             rowsPerPageText: 'Filas por Pagina:',
                             rangeSeparatorText: 'de'
@@ -382,7 +432,7 @@ const CreatePackage = ({
                     openPopup={transfersOpen}
                     setOpenPopup={setTransfersOpen}
                 />
-                <CreateTransfer
+                <CreateExcursion
                     data={excursions}
                     setData={setExcursions}
                     openPopup={excursionsOpen}

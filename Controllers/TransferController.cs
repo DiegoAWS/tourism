@@ -29,17 +29,22 @@ namespace tourism.Controllers
         }
 
         // GET: api/Transfer/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Transfer>> GetTransfer(long id)
+        [HttpGet("{fk}")]
+        public async Task<List<Transfer>> GetTransfer(long fk)
         {
-            var transfer = await _context.Transfer.FindAsync(id);
 
-            if (transfer == null)
+            var transfers = from s in _context.Transfer select s;
+
+
+            transfers = transfers.Where(s => s.PackageId == fk);
+
+
+            if (transfers == null)
             {
-                return NotFound();
+                return null;
             }
 
-            return transfer;
+            return await transfers.ToListAsync();
         }
 
         // PUT: api/Transfer/5
