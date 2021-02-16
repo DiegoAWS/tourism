@@ -35,7 +35,7 @@ const Packages = props => {
     ]
 
     if (localStorage.role === "ADMIN")
-        camposPaquete.concat(['userId', 'Creado por'])
+        camposPaquete.concat(['nameSalesMan', 'Creado por'])
     //#endregion campos Paquete
 
 

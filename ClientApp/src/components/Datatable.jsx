@@ -3,13 +3,10 @@ import DataTable, { createTheme } from 'react-data-table-component'
 import { TextField, InputAdornment, IconButton, Modal, Button, Grid } from '@material-ui/core'
 
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
-import EditIcon from '@material-ui/icons/Edit'
 import CloseIcon from '@material-ui/icons/Close'
 import SearchIcon from '@material-ui/icons/Search'
 
 import loading from '../assets/img/loading.gif'
-
-
 
 
 
